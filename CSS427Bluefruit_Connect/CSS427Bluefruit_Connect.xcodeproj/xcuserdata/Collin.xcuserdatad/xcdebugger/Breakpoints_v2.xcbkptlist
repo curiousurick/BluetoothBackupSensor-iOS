@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BLE Test/FirmwareUpdater.m"
+            timestampString = "456744379.155695"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "79"
+            endingLineNumber = "79"
+            landmarkName = "-releases"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BLE Test/BLEAppDelegate.swift"
+            timestampString = "468234448.130605"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "91"
+            endingLineNumber = "91"
+            landmarkName = "BLEAppDelegate"
+            landmarkType = "3">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BLE Test/ControllerViewController.swift"
+            timestampString = "459709941.062213"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1050"
+            endingLineNumber = "1050"
+            landmarkName = "sendColor(_:green:blue:)"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "BluetoothLE_Test.ControllerViewController.sendColor (BluetoothLE_Test.ControllerViewController)(Swift.UInt8, green : Swift.UInt8, blue : Swift.UInt8) -&gt; ()"
+                  moduleName = "BluetoothLE Test"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Volumes/Tab/Xcode%20Projects/Bluefruit_LE_Connect/BLE%20Test/ControllerViewController.swift"
+                  timestampString = "456868246.08029"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1022"
+                  endingLineNumber = "1022"
+                  offsetFromSymbolStart = "32">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "protocol witness for BluetoothLE_Test.ColorPickerViewControllerDelegate.sendColor &lt;A : BluetoothLE_Test.ColorPickerViewControllerDelegate&gt;(BluetoothLE_Test.ColorPickerViewControllerDelegate.Self)(Swift.UInt8, green : Swift.UInt8, blue : Swift.UInt8) -&gt; () in conformance BluetoothLE_Test.ControllerViewController : BluetoothLE_Test.ColorPickerViewControllerDelegate in BluetoothLE_Test"
+                  moduleName = "BluetoothLE Test"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Volumes/Tab/Xcode%20Projects/Bluefruit_LE_Connect/BLE%20Test/ControllerViewController.swift"
+                  timestampString = "456868246.080495"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1020"
+                  endingLineNumber = "1020"
+                  offsetFromSymbolStart = "20">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BLE Test/BLEMainViewController.swift"
+            timestampString = "470648906.263012"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "717"
+            endingLineNumber = "717"
+            landmarkName = "centralManager(_:didConnectPeripheral:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>

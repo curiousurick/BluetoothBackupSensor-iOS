@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10102" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10080"/>
+    </dependencies>
+    <scenes>
+        <!--Backup Sensor View Controller-->
+        <scene sceneID="bFY-bJ-bgz">
+            <objects>
+                <viewController storyboardIdentifier="backupSensorController" id="kdy-kz-tHQ" customClass="CSS427BackupSensorViewController" customModule="Adafruit_Bluefruit_LE_Connect" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="kda-p0-rZT"/>
+                        <viewControllerLayoutGuide type="bottom" id="qxU-kE-Qao"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="YI1-XA-K6A">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Now that you have connected your alert device, keep this app open to be notified when you have backed up too far." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J38-0d-EAK">
+                                <rect key="frame" x="16" y="84" width="288" height="81.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="D4g-ww-krk">
+                                <rect key="frame" x="86" y="183" width="149" height="30"/>
+                                <state key="normal" title="Request new Reading"/>
+                                <connections>
+                                    <action selector="requestReading:" destination="kdy-kz-tHQ" eventType="touchUpInside" id="tTL-KF-Nuw"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Updates every 5 seconds" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Oun-bn-39B">
+                                <rect key="frame" x="63" y="318" width="195" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No readings yet" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zcf-4U-Znx">
+                                <rect key="frame" x="99.5" y="363" width="121" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="060-bJ-b8W">
+                                <rect key="frame" x="74" y="475" width="173" height="30"/>
+                                <state key="normal" title="Disable Interval Readings"/>
+                                <connections>
+                                    <action selector="toggleIntervalReadings:" destination="kdy-kz-tHQ" eventType="touchUpInside" id="iSM-Kp-bog"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No readings yet" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="876-nG-yft">
+                                <rect key="frame" x="99.5" y="228" width="121" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Zcf-4U-Znx" firstAttribute="centerX" secondItem="YI1-XA-K6A" secondAttribute="centerX" id="1SS-Nn-bmq"/>
+                            <constraint firstItem="Zcf-4U-Znx" firstAttribute="top" secondItem="Oun-bn-39B" secondAttribute="bottom" constant="24" id="2dL-PW-Hu1"/>
+                            <constraint firstItem="Oun-bn-39B" firstAttribute="centerX" secondItem="YI1-XA-K6A" secondAttribute="centerX" id="8CX-Z0-4dn"/>
+                            <constraint firstItem="J38-0d-EAK" firstAttribute="leading" secondItem="YI1-XA-K6A" secondAttribute="leading" constant="16" id="Q8c-MG-ctB"/>
+                            <constraint firstItem="876-nG-yft" firstAttribute="centerX" secondItem="YI1-XA-K6A" secondAttribute="centerX" id="QiZ-MP-ych"/>
+                            <constraint firstItem="060-bJ-b8W" firstAttribute="top" secondItem="Zcf-4U-Znx" secondAttribute="bottom" constant="91" id="X4Q-Gc-t5Y"/>
+                            <constraint firstItem="060-bJ-b8W" firstAttribute="centerX" secondItem="YI1-XA-K6A" secondAttribute="centerX" id="XNM-bX-heZ"/>
+                            <constraint firstItem="D4g-ww-krk" firstAttribute="top" secondItem="J38-0d-EAK" secondAttribute="bottom" constant="17.5" id="e5W-ZF-Qwp"/>
+                            <constraint firstItem="876-nG-yft" firstAttribute="top" secondItem="D4g-ww-krk" secondAttribute="bottom" constant="15" id="hkL-Hv-9u6"/>
+                            <constraint firstItem="qxU-kE-Qao" firstAttribute="top" secondItem="060-bJ-b8W" secondAttribute="bottom" constant="63" id="mpN-nb-JtF"/>
+                            <constraint firstItem="J38-0d-EAK" firstAttribute="top" secondItem="kda-p0-rZT" secondAttribute="bottom" constant="20" id="pwY-5c-9bJ"/>
+                            <constraint firstAttribute="trailing" secondItem="J38-0d-EAK" secondAttribute="trailing" constant="16" id="qZ7-U1-YNQ"/>
+                            <constraint firstItem="D4g-ww-krk" firstAttribute="centerX" secondItem="YI1-XA-K6A" secondAttribute="centerX" id="st2-ay-lCX"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="Pks-oJ-Bzg"/>
+                    <connections>
+                        <outlet property="currentReadingView" destination="Zcf-4U-Znx" id="u37-Ms-6hU"/>
+                        <outlet property="requestReadingButton" destination="D4g-ww-krk" id="Sx9-e8-Y0n"/>
+                        <outlet property="requestedReadingView" destination="876-nG-yft" id="U2c-1u-8Ls"/>
+                        <outlet property="toggleIntervalButton" destination="060-bJ-b8W" id="1rh-MW-iiY"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="mUi-6u-fE0" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="760" y="326"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="zsv-yn-fQz">
+            <objects>
+                <navigationController storyboardIdentifier="CSS427Controller" automaticallyAdjustsScrollViewInsets="NO" id="NUe-hV-wPA" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="2J4-OC-wYH">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="kdy-kz-tHQ" kind="relationship" relationship="rootViewController" id="vqH-jO-DFk"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="orB-iP-8D4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="229" y="350"/>
+        </scene>
+    </scenes>
+</document>
