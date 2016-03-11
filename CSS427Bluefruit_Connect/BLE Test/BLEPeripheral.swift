@@ -14,7 +14,7 @@ import CoreBluetooth
 protocol BLEPeripheralDelegate: Any {
     
     var connectionMode:ConnectionMode { get }
-    func didReceiveData(newData:NSData)
+    func didReceiveData(newData:NSData, uuid: String)
     func connectionFinalized()
     func uartDidEncounterError(error:NSString)
     
@@ -56,6 +56,7 @@ class BLEPeripheral: NSObject, CBPeripheralDelegate {
         
         switch withMode.rawValue {
         case ConnectionMode.UART.rawValue,
+            ConnectionMode.BackupSensor.rawValue,
              ConnectionMode.PinIO.rawValue,
              ConnectionMode.Controller.rawValue,
             ConnectionMode.DFU.rawValue:
@@ -179,6 +180,7 @@ class BLEPeripheral: NSObject, CBPeripheralDelegate {
                 
             //UART, Pin I/O, or Controller mode
             else if delegate.connectionMode == ConnectionMode.UART ||
+                    delegate.connectionMode == ConnectionMode.BackupSensor ||
                     delegate.connectionMode == ConnectionMode.PinIO ||
                     delegate.connectionMode == ConnectionMode.Controller ||
                     delegate.connectionMode == ConnectionMode.DFU {
@@ -222,6 +224,7 @@ class BLEPeripheral: NSObject, CBPeripheralDelegate {
         
         // UART mode
         if  delegate.connectionMode == ConnectionMode.UART ||
+            delegate.connectionMode == ConnectionMode.BackupSensor ||
             delegate.connectionMode == ConnectionMode.PinIO ||
             delegate.connectionMode == ConnectionMode.Controller ||
             delegate.connectionMode == ConnectionMode.DFU {
@@ -342,12 +345,12 @@ class BLEPeripheral: NSObject, CBPeripheralDelegate {
         }
         
         //UART mode
-        if delegate.connectionMode == ConnectionMode.UART || delegate.connectionMode == ConnectionMode.PinIO || delegate.connectionMode == ConnectionMode.Controller {
+        if delegate.connectionMode == ConnectionMode.UART || delegate.connectionMode == ConnectionMode.BackupSensor || delegate.connectionMode == ConnectionMode.PinIO || delegate.connectionMode == ConnectionMode.Controller {
             
             if (characteristic == self.rxCharacteristic){
                 
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    self.delegate.didReceiveData(characteristic.value!)
+                    self.delegate.didReceiveData(characteristic.value!, uuid: self.currentPeripheral!.identifier.UUIDString)
                 })
                 
             }

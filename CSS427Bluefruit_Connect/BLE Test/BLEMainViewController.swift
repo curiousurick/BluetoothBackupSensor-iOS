@@ -231,6 +231,7 @@ class BLEMainViewController : UIViewController, UINavigationControllerDelegate, 
         infoBarButton = UIBarButtonItem(customView: buttonCopy)
         deviceListViewController = DeviceListViewController(aDelegate: self)
         deviceListViewController.navigationItem.rightBarButtonItem = infoBarButton
+        deviceListViewController.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Compose, target: self, action: "openView:")
         deviceListViewController.navigationItem.backBarButtonItem = UIBarButtonItem(title: "Disconnect", style: UIBarButtonItemStyle.Plain, target: nil, action: nil)
         //add scan indicator to toolbar
         scanIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.White)
@@ -239,6 +240,14 @@ class BLEMainViewController : UIViewController, UINavigationControllerDelegate, 
         let space = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FlexibleSpace, target: nil, action: nil)
         scanButtonItem = UIBarButtonItem(title: "Scan for peripherals", style: UIBarButtonItemStyle.Plain, target: self, action: Selector("toggleScan:"))
         deviceListViewController.toolbarItems = [space, scanButtonItem!, space]
+        
+    }
+    
+    func openView(sender: AnyObject) {
+        
+        let storybaord = UIStoryboard(name: "CSS427Storyboard", bundle: NSBundle.mainBundle())
+        let controller = storybaord.instantiateInitialViewController()
+        self.presentViewController(controller!, animated: true, completion: nil)
         
     }
     
@@ -663,6 +672,11 @@ class BLEMainViewController : UIViewController, UINavigationControllerDelegate, 
                 }
                 
             }
+            else if connectionMode == ConnectionMode.BackupSensor {
+                if connectionStatus == ConnectionStatus.Connected {
+                    disconnectAll()
+                }
+            }
                 
                 // Returning from Pin I/O
             else if connectionMode == ConnectionMode.PinIO {
@@ -882,6 +896,9 @@ class BLEMainViewController : UIViewController, UINavigationControllerDelegate, 
         
         self.navController.popToRootViewControllerAnimated(true)
         
+        self.sensorPeripheral = nil
+        self.receiverPeripheral = nil
+        
         //display disconnect alert
         let alert = UIAlertView(title:"Disconnected",
             message:"BlE device disconnected",
@@ -985,7 +1002,7 @@ class BLEMainViewController : UIViewController, UINavigationControllerDelegate, 
             else {
                 notConnected = "Receiver"
             }
-            let alert = UIAlertController(title: "Almost there!", message: "Now connect the \(notConnected) Device To Continue", preferredStyle: .Alert)
+            let alert = UIAlertController(title: "Almost there!", message: "Now connect the \(notConnected!) Device To Continue", preferredStyle: .Alert)
             alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
             
             currentAlertView!.dismissViewControllerAnimated(true, completion: nil)
@@ -1090,17 +1107,17 @@ class BLEMainViewController : UIViewController, UINavigationControllerDelegate, 
     }
     
     
-    func didReceiveData(newData: NSData) {
+    func didReceiveData(newData: NSData, uuid: String) {
         
         //Data incoming from UART peripheral, forward to current view controller
         
         printLog(self, funcName: "didReceiveData", logString: "\(newData.hexRepresentationWithSpaces(true))")
         
         if (connectionStatus == ConnectionStatus.Connected ) {
-            //UART
-            if (connectionMode == ConnectionMode.UART) {
+            //UART or BackupSensor
+            if ((connectionMode == ConnectionMode.UART || connectionMode == ConnectionMode.BackupSensor) && backupSensorViewController != nil) {
                 //send data to UART Controller
-                backupSensorViewController.receiveData(newData)
+                backupSensorViewController.receiveData(newData, uuid: uuid)
                 //uartViewController.receiveData(newData)
             }
                 

@@ -28,6 +28,9 @@ class BLEAppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
         
         self.mainViewController = BLEMainViewController.sharedInstance
         
+//        let storyboard = UIStoryboard(name: "CSS427Storyboard", bundle: NSBundle.mainBundle())
+//        let controller = storyboard.instantiateInitialViewController()
+        
         window!.rootViewController = mainViewController
         window!.makeKeyAndVisible()
         

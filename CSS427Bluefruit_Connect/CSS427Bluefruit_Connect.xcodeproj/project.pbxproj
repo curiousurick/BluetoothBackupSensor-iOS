@@ -9,8 +9,12 @@
 /* Begin PBXBuildFile section */
 		5E12EB5E1C8E765E00AE4A1C /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5E12EB5D1C8E765E00AE4A1C /* Images.xcassets */; };
 		5E12EB601C8E766500AE4A1C /* BluetoothLE Test.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 5E12EB5F1C8E766500AE4A1C /* BluetoothLE Test.entitlements */; };
+		5E1B87951C8E8472001B5120 /* CommandConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E1B87941C8E8472001B5120 /* CommandConstants.swift */; };
+		5E1B87981C8E8A92001B5120 /* CSS427IntervalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E1B87971C8E8A92001B5120 /* CSS427IntervalView.swift */; };
+		5E1B879A1C8E8AA0001B5120 /* CSS427RequestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E1B87991C8E8AA0001B5120 /* CSS427RequestView.swift */; };
 		5E89DA581C7EC3EA005C9256 /* CSS427Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5E89DA571C7EC3EA005C9256 /* CSS427Storyboard.storyboard */; };
 		5E89DA5A1C7EC59D005C9256 /* CSS427BackupSensorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E89DA591C7EC59D005C9256 /* CSS427BackupSensorViewController.swift */; };
+		5E9CC5841C92C80A000F8DB6 /* CSS427ThresholdView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E9CC5831C92C80A000F8DB6 /* CSS427ThresholdView.swift */; };
 		A9182F381B6AD7E700E32C10 /* DetectKeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9182F371B6AD7E700E32C10 /* DetectKeyboardViewController.swift */; };
 		A98580101B66F38A000F93DA /* MqttSettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A985800F1B66F38A000F93DA /* MqttSettingsViewController.xib */; };
 		A98580161B66F4C5000F93DA /* MqttSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98580151B66F4C5000F93DA /* MqttSettingsViewController.swift */; };
@@ -219,8 +223,12 @@
 		4C0559455836E18181278C89 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		5E12EB5D1C8E765E00AE4A1C /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = CSS427Bluefruit_Connect/Images.xcassets; sourceTree = "<group>"; };
 		5E12EB5F1C8E766500AE4A1C /* BluetoothLE Test.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "BluetoothLE Test.entitlements"; path = "CSS427Bluefruit_Connect/BluetoothLE Test.entitlements"; sourceTree = "<group>"; };
+		5E1B87941C8E8472001B5120 /* CommandConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommandConstants.swift; sourceTree = "<group>"; };
+		5E1B87971C8E8A92001B5120 /* CSS427IntervalView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSS427IntervalView.swift; sourceTree = "<group>"; };
+		5E1B87991C8E8AA0001B5120 /* CSS427RequestView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSS427RequestView.swift; sourceTree = "<group>"; };
 		5E89DA571C7EC3EA005C9256 /* CSS427Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = CSS427Storyboard.storyboard; sourceTree = "<group>"; };
 		5E89DA591C7EC59D005C9256 /* CSS427BackupSensorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSS427BackupSensorViewController.swift; sourceTree = "<group>"; };
+		5E9CC5831C92C80A000F8DB6 /* CSS427ThresholdView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSS427ThresholdView.swift; sourceTree = "<group>"; };
 		A9182F371B6AD7E700E32C10 /* DetectKeyboardViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetectKeyboardViewController.swift; sourceTree = "<group>"; };
 		A985800F1B66F38A000F93DA /* MqttSettingsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MqttSettingsViewController.xib; sourceTree = "<group>"; };
 		A98580151B66F4C5000F93DA /* MqttSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MqttSettingsViewController.swift; sourceTree = "<group>"; };
@@ -422,6 +430,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5E1B87961C8E8A77001B5120 /* CSS427 */ = {
+			isa = PBXGroup;
+			children = (
+				5E89DA591C7EC59D005C9256 /* CSS427BackupSensorViewController.swift */,
+				5E1B87941C8E8472001B5120 /* CommandConstants.swift */,
+				5E1B87971C8E8A92001B5120 /* CSS427IntervalView.swift */,
+				5E1B87991C8E8AA0001B5120 /* CSS427RequestView.swift */,
+				5E9CC5831C92C80A000F8DB6 /* CSS427ThresholdView.swift */,
+			);
+			name = CSS427;
+			sourceTree = "<group>";
+		};
 		A9857FFA1B66ECC6000F93DA /* Mqtt */ = {
 			isa = PBXGroup;
 			children = (
@@ -541,6 +561,7 @@
 		F08BFF4718A4F7E600EF43FB /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				5E89DA571C7EC3EA005C9256 /* CSS427Storyboard.storyboard */,
 				F0081CD41AFCA134008967EE /* UserFilesTableViewCell.xib */,
 				F0CCCF981B0F266D0061558B /* DFUViewController.xib */,
 				F0081CDB1AFCAB2F008967EE /* UpdateDialogViewController.xib */,
@@ -561,8 +582,6 @@
 				F0CE1B9618A23FF8005F831A /* UARTViewController_iPad.xib */,
 				F0FB078718C02D9800D263DD /* UARTViewController_iPhone.xib */,
 				A9C61DE91B6A75DD005C3D9B /* MQTT */,
-				5E89DA571C7EC3EA005C9256 /* CSS427Storyboard.storyboard */,
-				5E89DA591C7EC59D005C9256 /* CSS427BackupSensorViewController.swift */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -626,6 +645,7 @@
 				F0718DFF19EE77F4002B5ABB /* DeviceListViewController.swift */,
 				F0F9C4A819E25BF000AF2352 /* HelpViewController.swift */,
 				F0F5865C19E7C8AB0000E544 /* PinCell.swift */,
+				5E1B87961C8E8A77001B5120 /* CSS427 */,
 				F08849D019E47EE6002B442A /* PinIOViewController.swift */,
 				F051AAD619DA96F7009A1383 /* UARTViewController.swift */,
 				F0A93B7C1B4223EB00BDBB85 /* GradientView.swift */,
@@ -1059,9 +1079,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5E9CC5841C92C80A000F8DB6 /* CSS427ThresholdView.swift in Sources */,
 				F051AAD719DA96F7009A1383 /* UARTViewController.swift in Sources */,
 				F0D4AFB91A32505300E9063E /* SensorValueCell.swift in Sources */,
 				F03A23921AF9CF4800075364 /* IntelHex2BinConverter.m in Sources */,
+				5E1B87951C8E8472001B5120 /* CommandConstants.swift in Sources */,
 				A9C61DE71B6A70F8005C3D9B /* MqttManager.swift in Sources */,
 				F07481591A725E8800A45EF7 /* ColorPickerViewController.swift in Sources */,
 				F03A23971AF9CF4800075364 /* FileOperations.m in Sources */,
@@ -1071,6 +1093,7 @@
 				F0BCF06819EBDC59006086C6 /* BLEAppDelegate.swift in Sources */,
 				F0F889A91A009B81008AA257 /* BLEInfo.swift in Sources */,
 				F0F889AB1A00BD55008AA257 /* BLEPeripheral.swift in Sources */,
+				5E1B87981C8E8A92001B5120 /* CSS427IntervalView.swift in Sources */,
 				F03A23661AF9CE8900075364 /* UpdateDialogViewController.m in Sources */,
 				F03A23831AF9CF1F00075364 /* ReleasesParser.m in Sources */,
 				F0718E0019EE77F4002B5ABB /* DeviceListViewController.swift in Sources */,
@@ -1078,6 +1101,7 @@
 				F03A23951AF9CF4800075364 /* DFUOperations.m in Sources */,
 				A9C61DED1B6AC782005C3D9B /* MqttSettingsHeaderCell.swift in Sources */,
 				F0F5865D19E7C8AB0000E544 /* PinCell.swift in Sources */,
+				5E1B879A1C8E8AA0001B5120 /* CSS427RequestView.swift in Sources */,
 				A985801B1B6A4E33000F93DA /* MqttSettingsStatusCell.swift in Sources */,
 				F02811C619ED19AA00D48BA5 /* Extensions.swift in Sources */,
 				F03A23841AF9CF1F00075364 /* FirmwareUpdater.m in Sources */,

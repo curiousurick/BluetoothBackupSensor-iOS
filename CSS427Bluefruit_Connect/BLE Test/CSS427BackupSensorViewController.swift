@@ -18,32 +18,28 @@ protocol CSS427BackupSensorDelegate: HelpViewControllerDelegate {
 }
 
 
-class CSS427BackupSensorViewController: UIViewController, MqttManagerDelegate {
+class CSS427BackupSensorViewController: UIViewController, MqttManagerDelegate, RequestViewDelegate, IntervalViewDelegate, ThresholdViewDelegate {
     
     private var sensorID: String?
     private var receiverID: String?
     
     
-    
     var delegate: CSS427BackupSensorDelegate?
     @IBOutlet var helpViewController:HelpViewController!
-    @IBOutlet weak var currentReadingView: UILabel!
-    
-    @IBOutlet weak var requestedReadingView: UILabel!
-    
-    @IBOutlet weak var requestReadingButton: UIButton!
-    @IBOutlet weak var toggleIntervalButton: UIButton!
-    
-    var intervalReadingsEnabled = true
+    @IBOutlet weak var intervalReadingView: CSS427IntervalView!
+    @IBOutlet weak var requestReadingView: CSS427RequestView!
+    @IBOutlet weak var thresholdView: CSS427ThresholdView!
     
     private let backgroundQueue : dispatch_queue_t = dispatch_queue_create("com.adafruit.bluefruitconnect.bgqueue", nil)
     
     private let notificationCommandString = "N!"
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.intervalReadingView.delegate = self
+        self.requestReadingView.delegate = self
+        self.thresholdView.delegate = self
         
-
         let mqttManager = MqttManager.sharedInstance
         if (MqttSettings.sharedInstance.isConnected) {
             mqttManager.delegate = self
@@ -59,49 +55,57 @@ class CSS427BackupSensorViewController: UIViewController, MqttManagerDelegate {
         receiverID = receiver
     }
     
-    
-    func showAlert(distance: Float) {
-            sendUartMessage("A", wasReceivedFromMqtt: false, uuid: receiverID)
-        
-//        let distanceMessage = String(format: "You are approaching another object.\nYou are %.2f cm from another object", arguments: [distance])
-//        
-//        let alertController = UIAlertController(title: "SLOW DOWN!", message: distanceMessage, preferredStyle: .Alert)
-//        
-//        let action = UIAlertAction(title: "OK", style: .Default) { (action) in
-//        }
-//        alertController.addAction(action)
-//        
-//        self.presentViewController(alertController, animated: true) { 
-//            //play alarm sound
-//            AudioServicesPlaySystemSound(1005);
-//            
-//        }
+    func sendRequest(command: String) {
+        sendUartMessage(command, wasReceivedFromMqtt: false, uuid: sensorID)
     }
     
-    func updateCurrentReadingView(distance: Float) {
-        currentReadingView.text = "\(distance) cm"
-    }
+    var alertShowing = false
+    var allowAlerts = true
     
-    func updateRequestedReadingView(distance: Float) {
-        requestedReadingView.text = "\(distance) cm"
-    }
-    
-    
-    @IBAction func requestReading(sender: AnyObject) {
-        let queryMessage = NSString(string: "R")
-        sendUartMessage(queryMessage, wasReceivedFromMqtt: false, uuid: sensorID)
-    }
-    
-    @IBAction func toggleIntervalReadings(sender: AnyObject) {
-        var queryMessage: NSString?
-        if intervalReadingsEnabled {
-            queryMessage = NSString(string: "D")
+    func showAlert(reading: String, device: Character) {
+        //TODO FIX THIS
+        if !alertShowing && allowAlerts {
+            alertShowing = true
+            var alertMessage: String?
+            switch device {
+            case "A":
+                alertMessage = "You are approaching another object.\nYou are \(reading) cm from another object"
+                break;
+            case "B":
+                alertMessage = "Wow it's really hot or cold! \nTemperature is \(reading)°"
+                break;
+            case "C":
+                alertMessage = "Really wonky angles! \(reading)"
+                break;
+            case "D":
+                alertMessage = "You are really good at reading a compass! \(reading)°"
+                break;
+            default:
+                printLog(self, funcName: "showAlert", logString: "Invalid device to show alert")
+            }
+            if alertMessage == nil { return }
+            
+            let alertController = UIAlertController(title: "ALERT!", message: alertMessage, preferredStyle: .Alert)
+            
+            let action = UIAlertAction(title: "OK", style: .Default) { (action) in
+                self.alertShowing = false
+            }
+            let stopAction = UIAlertAction(title: "STOP!!", style: .Destructive, handler: { (action) in
+                self.allowAlerts = false
+            })
+            alertController.addAction(action)
+            alertController.addAction(stopAction)
+            
+            self.presentViewController(alertController, animated: true) {
+                //play alarm sound
+                AudioServicesPlaySystemSound(1005);
+            }
+            
         }
-        else {
-            queryMessage = NSString(string: "E")
-        }
-        sendUartMessage(queryMessage!, wasReceivedFromMqtt: false, uuid: sensorID)
-        
+    }
+    
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        intervalReadingView.closeKeyboard()
     }
     
     func sendUartMessage(message: NSString, wasReceivedFromMqtt: Bool, uuid: String?) {
@@ -122,84 +126,101 @@ class CSS427BackupSensorViewController: UIViewController, MqttManagerDelegate {
         }
     }
     
-    func updateConsoleWithIncomingData(newData:NSData) {
+    func updateConsoleWithIncomingData(newStringInput:String) {
         
-        //Write new received data to the console text view
-        dispatch_async(backgroundQueue, { () -> Void in
-            //convert data to string & replace characters we can't display
-            let dataLength:Int = newData.length
-            var data = [UInt8](count: dataLength, repeatedValue: 0)
+        var newString = newStringInput.stringByReplacingOccurrencesOfString("\r", withString: "")
+        newString = newString.stringByReplacingOccurrencesOfString("\n", withString: "")
+        
+        printLog(self, funcName: "updateConsoleWithIncomingData", logString: newString)
+        if newString.characters.count < 2 { return }
+        //Check for notification command & send if needed
+        if newString.containsString(self.notificationCommandString) == true {
+            printLog(self, funcName: "Checking for notification", logString: "does contain match")
+            let msgString = newString.stringByReplacingOccurrencesOfString(self.notificationCommandString, withString: "")
+            self.sendNotification(msgString)
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), { () -> Void in
             
-            newData.getBytes(&data, length: dataLength)
+            self.updateReading(newString)
             
-            for index in 0...dataLength-1 {
-                if (data[index] <= 0x1f) || (data[index] >= 0x80) { //null characters
-                    if (data[index] != 0x9)       //0x9 == TAB
-                        && (data[index] != 0xa)   //0xA == NL
-                        && (data[index] != 0xd) { //0xD == CR
-                        data[index] = 0xA9
-                    }
-                }
-            }
-            
-            
-            let newString = NSString(bytes: &data, length: dataLength, encoding: NSUTF8StringEncoding)
-            let newSwiftString = newString as! String
-            
-            printLog(self, funcName: "updateConsoleWithIncomingData", logString: newSwiftString)
-            
-            //Check for notification command & send if needed
-            if newString!.containsString(self.notificationCommandString) == true {
-                printLog(self, funcName: "Checking for notification", logString: "does contain match")
-                let msgString = newString!.stringByReplacingOccurrencesOfString(self.notificationCommandString, withString: "")
-                self.sendNotification(msgString)
-            }
-            
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                let printableString = newSwiftString.substringFromIndex(newSwiftString.startIndex.advancedBy(1))
-                let distance = Float(printableString)
-                let command = newSwiftString[newSwiftString.startIndex]
-                if command == "R" {
-                    if (distance != nil) {
-                        self.updateRequestedReadingView(distance!)
-                    }
-                }
-                else if command == "I" {
-                    if (distance != nil) {
-                        self.updateCurrentReadingView(distance!)
-                    }
-                }
-                else if command == "A" {
-                    if (distance != nil) {
-                        self.showAlert(distance!)
-                    }
-                }
-                else if command == "D" {
-                    self.intervalReadingsEnabled = false
-                    self.toggleIntervalButton.setTitle("Enable Interval Readings", forState: .Normal)
-                }
-                else if command == "E" {
-                    self.intervalReadingsEnabled = true
-                    self.toggleIntervalButton.setTitle("Disable Interval Readings", forState: .Normal)
-                }
-                else {
-                    printLog(self, funcName: "updateConsoleWithIncomingData", logString: "Invalid command received")
-                }
-            })
         })
     }
     
-    func resetUI() {
-        if (currentReadingView != nil) {
-            currentReadingView.text = ""
+    func updateReading(newString: String) {
+        if containsACommand(newString) == false { return }
+        let command = newString[newString.startIndex]
+        let letters = NSCharacterSet.letterCharacterSet()
+        //let command = reading.substringToIndex(reading.startIndex.advancedBy(2))
+        var readString: String?
+        if newString.characters.count > 2 {
+            readString = newString.substringFromIndex(newString.startIndex.advancedBy(2))
         }
-        if (requestedReadingView != nil) {
-            requestedReadingView.text = ""
+        if (readString == nil) {
+            self.intervalReadingView.checkToggle(newString.substringToIndex(newString.startIndex.advancedBy(2)))
+            self.sendUartMessage(newString, wasReceivedFromMqtt: false, uuid: self.receiverID)
+            return
+        }
+        var index = 0;
+        for var c in readString!.unicodeScalars {
+            if letters.longCharacterIsMember(c.value) {
+                let char = readString![readString!.startIndex.advancedBy(index)]
+                if char == "X" || char == "Y" || char == "Z" {
+                    index += 1
+                    continue
+                }
+                let newReading = readString!.substringFromIndex(readString!.startIndex.advancedBy(index))
+                readString = readString!.substringToIndex(readString!.startIndex.advancedBy(index))
+                print(newReading)
+                updateReading(newReading)
+                break;
+            }
+            index += 1
+        }
+        if (readString == nil || readString!.characters.count == 0) {
+            self.intervalReadingView.checkToggle(newString.substringToIndex(newString.startIndex.advancedBy(2)))
+             self.sendUartMessage(newString, wasReceivedFromMqtt: false, uuid: self.receiverID)
+            return
+        }
+        let device = newString[newString.startIndex.advancedBy(1)]
+
+        switch command {
+        case "R":
+            self.requestReadingView.updateReading(readString!, device: device)
+            let thing = "R\(device)\(readString!)"
+            self.sendUartMessage(thing, wasReceivedFromMqtt: false, uuid: self.receiverID)
+            break;
+        //Interval
+        case "I":
+            self.intervalReadingView.updateReading(readString!, device: device)
+            let thing = "I\(device)\(readString!)"
+            self.sendUartMessage(thing, wasReceivedFromMqtt: false, uuid: self.receiverID)
+            break;
+        //Alarm
+        case "A":
+            let thing = "A\(device)\(readString!)"
+            self.sendUartMessage(thing, wasReceivedFromMqtt: false, uuid: self.receiverID)
+            self.showAlert(readString!, device: device)
+            
+            break;
+        default:
+            printLog(self, funcName: "updateConsoleWithIncomingData", logString: "Invalid command received")
+            break;
+            
+        }
+    }
+    
+    func resetUI() {
+        if (intervalReadingView != nil) {
+            intervalReadingView.clear()
+        }
+        if (requestReadingView != nil) {
+            requestReadingView.clear()
         }
         
     }
     
-    func receiveData(newData: NSData) {
+    func receiveData(newData: NSData, uuid: String) {
         if (isViewLoaded() && view.window != nil) {
             
             let mqttSettings = MqttSettings.sharedInstance
@@ -212,7 +233,35 @@ class CSS427BackupSensorViewController: UIViewController, MqttManagerDelegate {
                 }
             }
             
-            updateConsoleWithIncomingData(newData)
+            //Write new received data to the console text view
+            dispatch_async(backgroundQueue, { () -> Void in
+                //convert data to string & replace characters we can't display
+                let dataLength:Int = newData.length
+                var data = [UInt8](count: dataLength, repeatedValue: 0)
+                
+                newData.getBytes(&data, length: dataLength)
+                
+                for index in 0...dataLength-1 {
+                    if (data[index] <= 0x1f) || (data[index] >= 0x80) { //null characters
+                        if (data[index] != 0x9)       //0x9 == TAB
+                            && (data[index] != 0xa)   //0xA == NL
+                            && (data[index] != 0xd) { //0xD == CR
+                            data[index] = 0xA9
+                        }
+                    }
+                }
+                if uuid == self.receiverID! {
+                    self.sendUartMessage("Q", wasReceivedFromMqtt: false, uuid: self.sensorID)
+                }
+                else if uuid == self.sensorID! {
+                    let newString = NSString(bytes: &data, length: dataLength, encoding: NSUTF8StringEncoding)
+                    let newSwiftString = newString as! String
+                    
+                    self.updateConsoleWithIncomingData(newSwiftString)
+//                    self.sendUartMessage(newSwiftString, wasReceivedFromMqtt: false, uuid: self.receiverID)
+//                    self.sendUartMessage("Q", wasReceivedFromMqtt: false, uuid: self.receiverID)
+                }
+            })
         }
     }
     
@@ -224,20 +273,20 @@ class CSS427BackupSensorViewController: UIViewController, MqttManagerDelegate {
         dispatch_async(dispatch_get_main_queue(), { [unowned self] in
             
             self.sendUartMessage((message as NSString), wasReceivedFromMqtt: true, uuid: self.sensorID)
-        })
+            })
     }
     
     func onMqttConnected() {
         dispatch_async(dispatch_get_main_queue(), { [unowned self] in
             
             self.updateMqttStatus()
-        })
+            })
     }
     
     func onMqttDisconnected() {
         dispatch_async(dispatch_get_main_queue(), { [unowned self] in
             self.updateMqttStatus()
-        })
+            })
     }
     
     func onMqttError(message: String) {
@@ -248,31 +297,31 @@ class CSS427BackupSensorViewController: UIViewController, MqttManagerDelegate {
     
     func updateMqttStatus() {
         //It's all just UI stuff I don't give a shit about.
-//        if let imageView = mqttBarButtonItemImageView {
-//            let status = MqttManager.sharedInstance.status
-//            let tintColor = self.view.tintColor
-//            
-//            switch (status) {
-//            case .Connecting:
-//                let imageFrames = [
-//                    UIImage(named:"mqtt_connecting1")!.tintWithColor(tintColor),
-//                    UIImage(named:"mqtt_connecting2")!.tintWithColor(tintColor),
-//                    UIImage(named:"mqtt_connecting3")!.tintWithColor(tintColor)
-//                ]
-//                imageView.animationImages = imageFrames
-//                imageView.animationDuration = 0.5 * Double(imageFrames.count)
-//                imageView.animationRepeatCount = 0;
-//                imageView.startAnimating()
-//                
-//            case .Connected:
-//                imageView.stopAnimating()
-//                imageView.image = UIImage(named:"mqtt_connected")!.tintWithColor(tintColor)
-//                
-//            default:
-//                imageView.stopAnimating()
-//                imageView.image = UIImage(named:"mqtt_disconnected")!.tintWithColor(tintColor)
-//            }
-//        }
+        //        if let imageView = mqttBarButtonItemImageView {
+        //            let status = MqttManager.sharedInstance.status
+        //            let tintColor = self.view.tintColor
+        //
+        //            switch (status) {
+        //            case .Connecting:
+        //                let imageFrames = [
+        //                    UIImage(named:"mqtt_connecting1")!.tintWithColor(tintColor),
+        //                    UIImage(named:"mqtt_connecting2")!.tintWithColor(tintColor),
+        //                    UIImage(named:"mqtt_connecting3")!.tintWithColor(tintColor)
+        //                ]
+        //                imageView.animationImages = imageFrames
+        //                imageView.animationDuration = 0.5 * Double(imageFrames.count)
+        //                imageView.animationRepeatCount = 0;
+        //                imageView.startAnimating()
+        //
+        //            case .Connected:
+        //                imageView.stopAnimating()
+        //                imageView.image = UIImage(named:"mqtt_connected")!.tintWithColor(tintColor)
+        //
+        //            default:
+        //                imageView.stopAnimating()
+        //                imageView.image = UIImage(named:"mqtt_disconnected")!.tintWithColor(tintColor)
+        //            }
+        //        }
     }
     
     
@@ -288,21 +337,21 @@ class CSS427BackupSensorViewController: UIViewController, MqttManagerDelegate {
             UIApplication.sharedApplication().presentLocalNotificationNow(note)
         })
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-
+    
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+     // Get the new view controller using segue.destinationViewController.
+     // Pass the selected object to the new view controller.
+     }
+     */
+    
 }
