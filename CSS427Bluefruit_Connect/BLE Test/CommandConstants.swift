@@ -45,7 +45,7 @@ let CommandDisableCompass = "DD"
 
 func containsACommand(string: String) -> Bool {
     
-    if (string.containsString(CommandRequestDistance))
+    if (string.substringToIndex(string.startIndex.advancedBy(2)).containsString(CommandRequestDistance))
         || (string.containsString(CommandRequestDistance))
         || (string.containsString(CommandRequestTemp))
         || (string.containsString(CommandRequestAccelerometer))
